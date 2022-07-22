@@ -1,5 +1,16 @@
 import React, { Component } from "react";
 import { Button, Col, Row, UncontrolledCarousel } from 'reactstrap';
+// import { bounce } from 'react-animations'
+// import Radium, { StyleRoot } from 'radium'
+
+
+// const styles = {
+//     bounce: {
+//         animation: 'x 1s',
+//         animationName: Radium.keyframes(bounce, 'bounce')
+//     }
+// }
+// style={styles.bounce}
 
 class Home extends Component {
     render() {
@@ -27,7 +38,6 @@ class Home extends Component {
             color: "#2969a9",
             fontSize: "18px",
         }
-
         return (
             <div>
                 <br /><br /><br />
@@ -219,6 +229,8 @@ class Home extends Component {
                     </div>
                 </div>
             </div>
+
+
         );
     }
 }

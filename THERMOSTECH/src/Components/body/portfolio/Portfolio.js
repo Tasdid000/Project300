@@ -1,41 +1,109 @@
-import React, { Component } from "react";
-import axios from "axios";
-import Portfoliolist from "./portfoliodetail";
-const api = axios.create(
-    {
-        baseURL: `http://127.0.0.1:8000/apiv1/Portfolio/`
-    }
-)
-class Portfolio extends Component {
-    state = {
-        portfolio: []
-    }
-    constructor() {
-        super();
-        api.get('/').then(res => {
-            console.log(res.data)
-            this.setState({ portfolio: res.data })
-        })
-    }
-    render() {
-        return (
-            <div>
-                <br /><br /><br />
-                <div style={{ backgroundImage: "url('/assets/images/17.png')", height: "250px", backgroundSize: "cover", backgroundPosition: "center center" }}>
-                    <p style={{ color: "#ea7826", fontSize: "30px", textAlign: "center", paddingTop: "100px" }}> 
-                    Featured Projects
-                    </p>
+import React, { Component } from 'react';
+import { CardColumns,Col, ModalBody, Modal, Button } from 'reactstrap';
+import { connect } from 'react-redux';
+import { fetchPortfolio } from '../../../redux/actionCreators';
+import Loading from '../Loading';
+import PortfolioDetails from './portfoliodetail';
+import Portfoliolist from './Portfoliolist';
 
-                </div>
-                <div className="container">
-                    <br /><br /><br />
-                    
-                    <p style={{ fontSize: "18px", textAlign: "center" }}>
-                        Explore some of the success stories we are proud to be associated with. We would be <br />happy to have one with you.
-                    </p>
-                    <Portfoliolist />
-                </div></div>
-        );
+
+const mapStateToProps = state => {
+    return {
+        Portfolio: state.Portfolio,
+
     }
 }
-export default Portfolio;
+
+const mapDispatchToProps = dispatch => {
+    return {
+        fetchPortfolio: () => dispatch(fetchPortfolio()),
+    }
+}
+
+class Portfolio extends Component {
+    state = {
+        selectedPortfolio: null,
+        modalOpen: false
+    }
+
+    onPortfolioSelect = Portfolio => {
+        this.setState({
+            selectedPortfolio: Portfolio,
+            modalOpen: !this.state.modalOpen
+
+        });
+    }
+    toggleModal = () => {
+        this.setState({
+            modalOpen: !this.state.modalOpen
+        })
+    }
+
+    componentDidMount() {
+        this.props.fetchPortfolio();
+
+    }
+
+    render() {
+        document.title = "Portfolio";
+
+        if (this.props.Portfolio.isLoading) {
+            return (
+                <Loading />
+            );
+        }
+        else {
+            const Portfolio = this.props.Portfolio.Portfolio.map(item => {
+                return (
+                    <Portfoliolist
+                        Portfolio={item}
+                        key={item.id}
+                        PortfolioSelect={() => this.onPortfolioSelect(item)}
+                    />
+                );
+            })
+            let PortfolioDetail = null;
+
+            if (this.state.selectedPortfolio != null) {
+                PortfolioDetail = <PortfolioDetails
+                    Portfolio={this.state.selectedPortfolio}
+                />
+            }
+
+            return (
+                <div style={{ overflow: "hidden" }}>
+                    <div>
+                        <div>
+                            <p style={{ paddingTop: "100px", textAlign: "center", fontSize: "40px", fontWeight: "bold", color: "#F38A16" }}>
+                                Featured Projects
+                            </p>
+                            <Col md="12" align="center">
+                                <img src='/assets/images/icon.png' alt='' />
+                            </Col>
+                            <p style={{ paddingTop: "15px", textAlign: "center", fontSize: "16px", }}>
+                                Explore some of the success stories we are proud to be associated with. We would be<br />
+                                happy to have one with you.
+                            </p>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <CardColumns>
+                            {Portfolio}
+                        </CardColumns>
+                        <Modal isOpen={this.state.modalOpen} style={{border:"none", marginRight:"100%", }}>
+                            <ModalBody>
+                                {PortfolioDetail}
+                                <Button color="warning" outline size='lg' onClick={this.toggleModal} style={{ width:"100px",marginTop:"20px"}}>
+                                    Back
+                                </Button>
+                            </ModalBody>
+                        </Modal>
+                    </div>
+                </div>
+            );
+        }
+
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Portfolio);

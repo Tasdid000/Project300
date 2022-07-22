@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Navbar, NavbarBrand, NavbarToggler, Collapse, Nav, NavItem, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from 'reactstrap'
-
+import './Navbar.css';
 class NavBar extends Component {
     constructor(props) {
         super(props);
@@ -41,14 +41,14 @@ class NavBar extends Component {
                                     <DropdownToggle
                                         nav
                                     >
-                                        ABOUT US
+                                        <span className="text">ABOUT US</span> 
                                     </DropdownToggle>
                                     <DropdownMenu right>
-                                        <DropdownItem style={{ color: "orange" }} href="/about">
-                                            About us
+                                        <DropdownItem href="/about">
+                                            <span className="text">About us</span> 
                                         </DropdownItem><br />
-                                        <DropdownItem style={{ color: "orange" }} href="/culture">
-                                            Our Culture
+                                        <DropdownItem href="/culture">
+                                            <span className="text">Our Culture</span> 
                                         </DropdownItem>
                                     </DropdownMenu>
                                 </UncontrolledDropdown>
@@ -60,48 +60,48 @@ class NavBar extends Component {
                                     <DropdownToggle
                                         nav
                                     >
-                                        SERVICES
+                                        <spam className="text">SERVICES</spam> 
                                     </DropdownToggle>
                                     <DropdownMenu right>
-                                        <DropdownItem style={{ color: "orange" }} href="/UI&UX">
-                                            UI & UX | Graphic | 3D Design
+                                        <DropdownItem href="/UI&UX">
+                                            <span className="text">UI & UX | Graphic | 3D Design</span> 
                                         </DropdownItem>
-                                        <DropdownItem style={{ color: "orange" }} href="/webdesign">
-                                            Web Design
+                                        <DropdownItem href="/webdesign">
+                                            <span className="text">Web Design</span> 
                                         </DropdownItem>
-                                        <DropdownItem style={{ color: "orange" }} href="/webapplication">
-                                            Web Application Development
+                                        <DropdownItem href="/webapplication">
+                                            <span className="text"> Web Application Development</span>
                                         </DropdownItem>
-                                        <DropdownItem style={{ color: "orange" }} href="/softwaredevelopment">
-                                            Softwere Development
+                                        <DropdownItem href="/softwaredevelopment">
+                                            <span className="text">Softwere Development</span> 
                                         </DropdownItem>
-                                        <DropdownItem style={{ color: "orange" }} href="/dataanalyst">
-                                            Data Analyst | ML| AL
+                                        <DropdownItem href="/dataanalyst">
+                                            <span className="text">Data Analyst | ML| AL</span> 
                                         </DropdownItem>
-                                        <DropdownItem style={{ color: "orange" }} href="/flutterdevelopment">
-                                            Flutter  Mobile App Development
+                                        <DropdownItem href="/flutterdevelopment">
+                                            <span className="text">Flutter  Mobile App Development</span> 
                                         </DropdownItem>
-                                        <DropdownItem style={{ color: "orange" }} href="/digitalmarkiting">
-                                            Digital Marketing | CMS
+                                        <DropdownItem href="/digitalmarkiting">
+                                            <span className="text">Digital Marketing | CMS</span> 
                                         </DropdownItem>
-                                        <DropdownItem style={{ color: "orange" }} href="/native">
-                                            Cross-Platform and Native App Development
+                                        <DropdownItem href="/native">
+                                            <span className="text">Cross-Platform and Native App Development</span> 
                                         </DropdownItem>
                                     </DropdownMenu>
                                 </UncontrolledDropdown>
                                 <NavItem>
                                     <NavLink href="/portfolio">
-                                        PORTFOLIO
+                                        <spam className="text">PORTFOLIO</spam>
                                     </NavLink>
                                 </NavItem>
                                 <NavItem>
-                                    <NavLink href="/craeers">
-                                        CAREERS
+                                    <NavLink href="/job">
+                                        <spam className="text">CAREERS</spam> 
                                     </NavLink>
                                 </NavItem>
                                 <NavItem >
                                     <NavLink href="/blog">
-                                        BLOG
+                                        <spam className="text">BLOG</spam> 
                                     </NavLink>
                                 </NavItem>
                                 <NavItem>
