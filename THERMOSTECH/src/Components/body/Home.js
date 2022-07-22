@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Button, Col, Row, UncontrolledCarousel } from 'reactstrap';
+import Portfolio from '../body/portfolio/Portfolio';
 // import { bounce } from 'react-animations'
 // import Radium, { StyleRoot } from 'radium'
 
@@ -196,10 +197,7 @@ class Home extends Component {
                     </div>
                     <br /><br /><br />
                     <div>
-                        <h1 align="center" style={{ color: "#2969a9" }}>
-                            Featured Projects
-                        </h1>
-                        <p style={{ fontSize: "20px", color: "red" }}>Comming soon</p>
+                        <Portfolio />
                     </div><br /><br /><br />
                     <div>
                         <h1 align="center" style={{ color: "#2969a9" }}>
