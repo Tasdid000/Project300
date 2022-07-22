@@ -1,37 +1,62 @@
 import React, { Component } from "react";
-import { Col, Form, FormGroup, Row, Input, Label, Button } from "reactstrap";
+import { Col, FormGroup, Row, Label, Button, Alert } from "reactstrap";
+import { Form, Control, Errors, actions } from 'react-redux-form'
+import axios from "axios";
+import { connect } from 'react-redux';
+import { baseUrl3 } from '../../redux/baseUrl'
+
+
+const mapDispatchToProps = dispatch => {
+    return {
+        resetFeedbackForm: () => {
+            dispatch(actions.reset('feedback'))
+        }
+    }
+}
+
+
+const required = val => val && val.length;
+const isNumber = val => !isNaN(Number(val));
+const validEmail = val => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val);
 
 class Contact extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            fname: "",
-            email: "",
-            Website_URL: "",
-            Phone_number: "",
-            textarea: ""
-        }
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+    state = {
+        alertShow: false,
+        alertText: null,
+        alertType: null
     }
-    handleInputChange = event => {
-        const value = event.target.type === "checkbox" ? event.target.checkbox : event.target.value;
-        const name = event.target.name
-        this.setState({
-            [name]: value
-        })
+    handleSubmit = values => {
+        //console.log(values);
+        axios.post(baseUrl3 + "feedback", values)
+            .then(response => response.status)
+            .then(status => {
+                if (status === 201) {
+                    this.setState({
+                        alertShow: true,
+                        alertText: "Submitted Successfully",
+                        alertType: "success"
+                    });
+                    setTimeout(() => {
+                        this.setState({
+                            alertShow: false
+                        })
+                    }, 2000)
+                }
+            })
+            .catch(error => {
+                console.log(error.response)
+            });
+        this.props.resetFeedbackForm();
     }
-    handleSubmit = event => {
-        console.log(this.state);
-        event.preventDefault();
-    }
+
     render() {
+        document.title = "Contact";
         return (
             <div>
                 <br /><br /><br />
-            <div style={{ backgroundImage: "url('/assets/images/17.png')", height: "250px", backgroundSize: "cover", backgroundPosition: "center center" }}>
-                <p style={{ color: "#ea7826", fontSize: "30px", textAlign: "center", paddingTop: "100px" }}>Our Services</p>
-            </div>
+                <div style={{ backgroundImage: "url('/assets/images/17.png')", height: "250px", backgroundSize: "cover", backgroundPosition: "center center" }}>
+                    <p style={{ color: "#ea7826", fontSize: "30px", textAlign: "center", paddingTop: "100px" }}>Our Services</p>
+                </div>
 
                 <br /><br />
                 <div>
@@ -44,22 +69,33 @@ class Contact extends Component {
                 </div>
                 <div className="shadow p-5 bg-white">
                     <div className="container my-3" style={{ marginLeft: "130px" }}>
-                        <Form>
+                        <Alert isOpen={this.state.alertShow} color={this.state.alertType}>{this.state.alertText}</Alert>
+                        <Form method="post" model="feedback" onSubmit={values => this.handleSubmit(values)}>
                             <Row>
                                 <Col md="5">
                                     <FormGroup>
                                         <Row>
-                                            <label for="name" style={{ fontSize: "14px" }}>
+                                            <Label htmlfor="name" style={{ fontSize: "14px" }}>
                                                 Name<em style={{ color: "red" }}>*</em>
-                                            </label>
-                                            <Input
-                                                id="name"
-                                                name="fname"
-                                                type="text"
+                                            </Label>
+                                            <Control.text
+                                                model='.name'
+                                                name="name"
                                                 placeholder=""
-                                                value={this.state.fname}
                                                 style={{ height: "40px" }}
-                                                onChange={this.handleInputChange}
+                                                validators={{
+                                                    required
+                                                }}
+                                            />
+                                            <Errors
+                                                className="text-danger"
+                                                model=".name"
+                                                show="touched"
+                                                messages={
+                                                    {
+                                                        required: "Required"
+                                                    }
+                                                }
                                             />
                                         </Row>
                                     </FormGroup>
@@ -67,17 +103,29 @@ class Contact extends Component {
                                 <Col md="5" style={{ marginLeft: "50px" }}>
                                     <FormGroup>
                                         <Row>
-                                            <label for="exampleEmail" style={{ fontSize: "14px" }}>
+                                            <Label htmlfor="exampleEmail" style={{ fontSize: "14px" }}>
                                                 Email<em style={{ color: "red" }}>*</em>
-                                            </label>
-                                            <Input
-                                                id="Email"
+                                            </Label>
+                                            <Control.text
+                                                model=".email"
                                                 name="email"
-                                                type="email"
-                                                value={this.state.email}
                                                 placeholder=""
-                                                onChange={this.handleInputChange}
                                                 style={{ height: "40px" }}
+                                                validators={{
+                                                    required,
+                                                    validEmail
+                                                }}
+                                            />
+                                            <Errors
+                                                className="text-danger"
+                                                model=".email"
+                                                show="touched"
+                                                messages={
+                                                    {
+                                                        required: "Required",
+                                                        validEmail: "Invalid Email!"
+                                                    }
+                                                }
                                             />
                                         </Row>
                                     </FormGroup>
@@ -87,35 +135,57 @@ class Contact extends Component {
                                 <Col md="5">
                                     <FormGroup>
                                         <Row>
-                                            <label for="Website" style={{ fontSize: "14px" }}>
+                                            <Label htmlfor="Website" style={{ fontSize: "14px" }}>
                                                 Website URL
-                                            </label>
-                                            <Input
-                                                id="Website"
+                                            </Label>
+                                            <Control.text
+                                                model=".Website_URL"
                                                 name="Website_URL"
-                                                type="text"
                                                 placeholder=""
-                                                onChange={this.handleInputChange}
-                                                value={this.state.Website_URL}
-                                                style={{ height: "40px" }} />
-                                                
+                                                style={{ height: "40px" }}
+                                                validators={{
+                                                    required
+                                                }}
+                                            />
+                                            <Errors
+                                                className="text-danger"
+                                                model=".Website_URL"
+                                                show="touched"
+                                                messages={
+                                                    {
+                                                        required: "Required",
+                                                    }
+                                                }
+                                            />
                                         </Row>
                                     </FormGroup>
                                 </Col>
                                 <Col md="5" style={{ marginLeft: "50px" }}>
                                     <FormGroup>
                                         <Row>
-                                            <label for="Phone" style={{ fontSize: "14px" }}>
+                                            <Label htmlfor="Phone" style={{ fontSize: "14px" }}>
                                                 Phone number
-                                            </label>
-                                            <Input
-                                                id="Phone"
-                                                name="Phone_number"
-                                                type="number"
+                                            </Label>
+                                            <Control.text
+                                                model=".Phone"
+                                                name="Phone"
                                                 placeholder=""
-                                                value={this.state.Phone_number}
                                                 style={{ height: "40px" }}
-                                                onChange={this.handleInputChange}
+                                                validators={{
+                                                    required,
+                                                    isNumber
+                                                }}
+                                            />
+                                            <Errors
+                                                className="text-danger"
+                                                model=".Phone"
+                                                show="touched"
+                                                messages={
+                                                    {
+                                                        required: "Required",
+                                                        validEmail: "Invalid Number !"
+                                                    }
+                                                }
                                             />
                                         </Row>
                                     </FormGroup>
@@ -123,22 +193,35 @@ class Contact extends Component {
                             </Row>
                             <FormGroup>
                                 <Row>
-                                    <label for="text_area" style={{ fontSize: "14px" }}>
+                                    <Label htmlfor="text_area" style={{ fontSize: "14px" }}>
                                         Submit Your Requirements/Query
-                                    </label>
-                                    <Input
-                                        id="message"
-                                        name="textarea"
-                                        type="textarea"
-                                        value={this.state.textarea}
+                                    </Label>
+                                    <Control.textarea
+                                        model=".contact"
+                                        name="contact"
                                         placeholder=""
                                         style={{ height: "100px", width: "1000px" }}
-                                        onChange={this.handleInputChange}
+                                        validators={
+                                            {
+                                                required
+                                            }
+                                        }
+                                    />
+                                    <Errors
+                                        className="text-danger"
+                                        model=".contact"
+                                        show="touched"
+                                        messages={
+                                            {
+                                                required: "Required"
+                                            }
+                                        }
                                     />
                                 </Row>
                             </FormGroup><br />
-                            <Row>
-                                <Col md="7">
+                            <FormGroup>
+                                <Row>
+                                    {/* <Col md="7">
                                     <FormGroup>
                                         <p style={{ fontSize: "14px" }}>
                                             Service you want
@@ -194,20 +277,26 @@ class Contact extends Component {
                                             </Col>
                                         </Row>
                                     </FormGroup>
-                                </Col>
-                                <Col>
-                                    <p style={{ fontSize: "25px", color: "#ea7826" }}>
-                                        Need any other information
-                                    </p>
-                                    <a href="tel:01709882474"><p style={{ fontSize: "20px", color: "#ea7826" }}>Call Now</p></a>
-                                </Col>
-                            </Row><br />
-                            <a href="/">
-                                <Button color="warning" outline size="lg">
-                                    Submit
-                                </Button>
-                            </a>
-                            
+                                </Col> */}
+
+                                    <Col>
+                                        <p style={{ fontSize: "25px", color: "#ea7826" }}>
+                                            Need any other information
+                                        </p>
+                                        <a href="tel:01709882474"><p style={{ fontSize: "20px", color: "#ea7826" }}>Call Now</p></a>
+                                    </Col>
+                                </Row>
+                            </FormGroup>
+                            <br />
+                            <FormGroup>
+                                <a href="/">
+                                    <Button color="warning" outline size="lg">
+                                        Submit
+                                    </Button>
+                                </a>
+
+                            </FormGroup>
+
                         </Form>
                     </div>
                 </div>
@@ -215,4 +304,4 @@ class Contact extends Component {
         );
     }
 }
-export default Contact;
+export default connect(null, mapDispatchToProps)(Contact);

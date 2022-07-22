@@ -1,29 +1,29 @@
-import React, { Component } from "react";
-import axios from "axios";
-import Portfoliodetail from "./portfoliodetail";
-const api = axios.create(
-    {
-        baseURL:`http://127.0.0.1:8000/apiv1/Portfolio/`
-    }
-)
-class Portfoliolist extends Component {
-    state = {
-        portfolio:[]
-    }
-    constructor(){
-        super();
-        api.get('/').then(res => {
-            console.log(res.data)
-            this.setState({portfolio: res.data})
-        })
-    }
-    render() {
-        return (
-            <div className="container">
-                
-                <Portfoliodetail/>
-            </div>
-        );
-    }
+import React from 'react';
+import { Card, CardImg, CardImgOverlay, CardBody,CardTitle } from 'reactstrap';
+
+
+const Portfoliolist = props => {
+    return (
+        <div>
+                <Card style={{ margin: "10px", borderRadius: '30px',fontFamily: "Open Sans,sans-serif", }}>
+                <CardBody>
+                    <CardImg
+                        width="100%"
+                        alt={props.Portfolio.title}
+                        src={props.Portfolio.image}
+                    />
+                    <CardImgOverlay>
+                        <CardTitle
+                            style={{ cursor: "pointer",border: "none",fontSize: "36px", fontWeight: "600", textAlign: "left"}}
+                            onClick={props.PortfolioSelect}
+                        >
+                           <p style={{color:"#397dc0"}}> {props.Portfolio.title}</p>
+                        </CardTitle>
+                    </CardImgOverlay>
+                </CardBody>
+            </Card> 
+        </div>
+    );
 }
+
 export default Portfoliolist;
